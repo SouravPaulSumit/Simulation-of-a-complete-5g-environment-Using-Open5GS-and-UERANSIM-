@@ -1,0 +1,26 @@
+sudo add-apt-repository ppa:wireshark-dev/stable
+sudo apt install wireshark
+apt show wireshark
+sudo dpkg-reconfigure wireshark-common
+sudo wireshark
+sudo apt-get install openssh-server
+sudo ufw allow 22
+
+#For caputing 5g protocols
+tcpdump -i any -w upf1.pcap
+scp teamslice@192.168.100.12:/home/teamslice/Documents/upf2.pcap /home/teamslice/Documents/upf2filtered.pcap
+scp teamsliceupfcore3@192.168.100.31:/home/teamsliceupfcore3/Documents/upf3.pcap /home/teamsliceupfcore3/Documents/upf3filtered.pcap
+scp teamslicexupf3@192.168.100.32:/home/teamslicexupf3/Documents/upf4.pcap /home/teamslicexupf3/Documents/upf4filtered.pcap
+scp teamslicexue2@192.168.100.33:/home/teamslicexue2/ue3.pcap /home/teamslicexue2/ue3filtered.pcap
+scp teamslice3rdue@192.168.100.34:/home/teamslice3rdue/ue4.pcap /home/teamslice3rdue/ue4filtered.pcap
+`
+
+scp teamsliceupfcore3@192.168.100.31:/home/teamsliceupfcore3/Documents/upf3video.pcap /home/teamsliceupfcore3/Documents/upf3videofilteredsst2.pcap
+scp teamslicexupf3@192.168.100.32:/home/teamslicexupf3/Documents/upf4video.pcap /home/teamslicexupf3/Documents/upf4videofilteredsst2.pcap
+scp teamslicexue2@192.168.100.33:/home/teamslicexue2/Documents/ue3video.pcap /home/teamslicexue2/Documents/ue3videofilteredsst2.pcap
+scp teamslice3rdue@192.168.100.34:/home/teamslice3rdue/Documents/ue4video.pcap /home/teamslice3rdue/Documents/ue4videofilteredsst2.pcap
+
+
+
+#for Filtering
+(gtpv2 || pfcp || gtp || ngap || http2.data.data || http2.headers || nr-rrc) && !(pfcp.msg_type==1) && !(pfcp.msg_type==2)

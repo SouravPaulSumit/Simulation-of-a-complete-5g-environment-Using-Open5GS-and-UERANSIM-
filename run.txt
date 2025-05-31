@@ -1,0 +1,103 @@
+
+/bin/open5gs-smfd -c /etc/open5gs/smf1.yaml 
+/bin/open5gs-smfd -c /etc/open5gs/smf2.yaml 
+
+
+
+#for stopping all
+systemctl stop open5gs-smfd &
+systemctl stop open5gs-nrfd &
+systemctl stop open5gs-scpd &
+systemctl stop open5gs-amfd &
+systemctl stop open5gs-ausfd &
+systemctl stop open5gs-udmd &
+systemctl stop open5gs-udrd &
+systemctl stop open5gs-pcfd &
+systemctl stop open5gs-nssfd &
+systemctl stop open5gs-bsfd &
+systemctl stop open5gs-webui
+
+systemctl start open5gs-nssfd &
+systemctl start open5gs-nrfd &
+systemctl start open5gs-scpd &
+systemctl start open5gs-amfd &
+systemctl start open5gs-ausfd &
+systemctl start open5gs-udmd &
+systemctl start open5gs-udrd &
+systemctl start open5gs-pcfd &
+systemctl start open5gs-bsfd &
+systemctl start open5gs-webui
+
+
+#for upf1
+ip tuntap add name ogstun mode tun | ip addr add 10.45.0.1/16 dev ogstun | ip link set ogstun up | iptables -t nat -A POSTROUTING -s 10.45.0.0/16 ! -o ogstun -j MASQUERADE 
+
+tcpdump -i ogstun -n
+
+#for upf2
+./Documents/upf.sh
+ip tuntap add name ogstun mode tun | ip addr add 10.46.0.1/16 dev ogstun | ip link set ogstun up | iptables -t nat -A POSTROUTING -s 10.46.0.0/16 ! -o ogstun -j MASQUERADE 
+
+tcpdump -i ogstun -n
+
+#for upf3
+ip tuntap add name ogstun mode tun &
+ip addr add 10.47.0.1/16 dev ogstun &
+ip link set ogstun up &
+iptables -t nat -A POSTROUTING -s 10.47.0.0/16 ! -o ogstun -j MASQUERADE 
+
+tcpdump -i ogstun -n
+
+
+ip tuntap add name ogstun2 mode tun 
+ip addr add 10.49.0.1/16 dev ogstun2
+ip link set ogstun2 up 
+iptables -t nat -A POSTROUTING -s 10.49.0.0/16 ! -o ogstun2 -j MASQUERADE 
+
+tcpdump -i ogstun2 -n
+
+#for upf4
+ip tuntap add name ogstun mode tun &
+ip addr add 10.48.0.1/16 dev ogstun &
+ip link set ogstun up &
+iptables -t nat -A POSTROUTING -s 10.48.0.0/16 ! -o ogstun -j MASQUERADE 
+
+tcpdump -i ogstun -n
+
+ip tuntap add name ogstun2 mode tun 
+ip addr add 10.50.0.1/16 dev ogstun2 
+ip link set ogstun2 up 
+iptables -t nat -A POSTROUTING -s 10.50.0/16 ! -o ogstun2 -j MASQUERADE 
+
+tcpdump -i ogstun -n
+
+#for ue1
+cd Downloads/UERANSIM/build
+./nr-gnb -c ../config/open5gs-gnb.yaml
+./nr-ue -c ../config/open5gs-ue.yaml
+
+sh nr-binder 10.45.0.2 firefox
+sh nr-binder 10.45.0.2 ping 8.8.8.8
+
+#for ue2
+./nr-gnb -c ../config/open5gs-gnb.yaml
+./nr-ue -c ../config/open5gs-ue.yaml
+
+
+sh nr-binder 10.46.0.2 firefox
+sh nr-binder 10.46.0.2 ping 8.8.8.8
+
+#for ue3
+./nr-gnb -c ../config/open5gs-gnb.yaml
+./nr-ue -c ../config/open5gs-ue.yaml
+./nr-ue -c ../config/open5gs-ue1.yaml
+
+sh nr-binder 10.47.0.2 linphone
+
+#for ue4
+./nr-gnb -c ../config/open5gs-gnb.yaml
+./nr-ue -c ../config/open5gs-ue.yaml
+./nr-ue -c ../config/open5gs-ue1.yaml
+
+sh nr-binder 10.48.0.2 linphone
+sh nr-binder 10.50.0.2 firefox

@@ -1,0 +1,22 @@
+Install of virtual box guest edition for drivers:
+apt-get -y install dkms build-essential
+sudo ./autorun.sh
+
+Make Static IP:
+nano /etc/netplan/01-network-manager-all.yaml
+
+network:
+ version: 2
+ renderer: NetworkManager
+ ethernets:
+   enp0s3:
+     dhcp4: no
+     addresses: [192.168.100.4/24]
+     gateway4: 192.168.100.1
+     nameservers:
+         addresses: [8.8.8.8,8.8.8.4]
+
+
+
+
+sudo netplan try

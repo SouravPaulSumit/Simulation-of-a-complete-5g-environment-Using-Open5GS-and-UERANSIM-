@@ -1,0 +1,14 @@
+#Installing JellyFin
+curl https://repo.jellyfin.org/install-debuntu.sh | sudo bash
+ps -ef | grep -i jellyfin
+cd ~
+mkdir data
+chown jellyfin:jellyfin /data/
+usermod -a -G jellyfin teamslicexue2
+chmod -R 777 /data/
+
+http://192.168.100.33:8096
+http://192.168.100.34:8096
+
+username: teamslicex
+password: 73@mslice

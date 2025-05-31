@@ -1,0 +1,16 @@
+#for installing kamailio
+apt update
+apt install default-mysql-server
+apt install kamailio kamailio-mysql-modules
+apt install kamailio-websocket-modules
+#for configuring kamailio server
+kamdbctl create #choose ascii as code
+systemctl start kamailio
+systemctl stop kamailio
+kamctl add ue_sst1_sd1 73@mslice
+kamctl add ue_sst1_sd2 73@mslice
+
+#for installing linphone in ue's
+sudo apt-get install -y linphone
+chmod -R 777 UERANSIM
+sh nr-binder 10.48.0.2 linphone

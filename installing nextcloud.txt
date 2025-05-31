@@ -1,0 +1,61 @@
+sudo apt update
+sudo apt install apache2 php libapache2-mod-php -y
+sudo apt install mariadb-server -y
+sudo mysql -u root
+ 
+CREATE DATABASE nextcloud;
+CREATE USER 'admin'@'localhost' IDENTIFIED BY 'admin123';
+GRANT ALL PRIVILEGES ON nextcloud.* TO 'admin'@'localhost';
+FLUSH PRIVILEGES;
+exit;
+ 
+ 
+ 
+sudo apt install php-gd php-mysql php-curl php-xml php-mbstring php-zip php-intl -y
+cd /var/www/html
+sudo wget https://download.nextcloud.com/server/releases/nextcloud-24.0.1.zip
+sudo unzip nextcloud-24.0.1.zip
+sudo chown -R www-data:www-data /var/www/html/nextcloud
+sudo touch /etc/apache2/sites-available/nextcloud.conf
+ 
+sudo nano /etc/apache2/sites-available/nextcloud.conf
+
+enter following within the file
+
+
+Alias /nextcloud "/var/www/html/nextcloud/"
+
+<Directory /var/www/html/owncloud/>
+  Require all granted
+  Options FollowSymlinks MultiViews
+  AllowOverride All
+
+ <IfModule mod_dav.c>
+  Dav off
+ </IfModule>
+
+ SetEnv HOME /var/www/html/nextcloud
+ SetEnv HTTP_HOME /var/www/html/nextcloud
+
+</Directory>
+
+sudo a2ensite nextcloud.conf
+sudo a2enmod rewrite headers env dir mime setenvif ssl
+
+
+sudo chmod 775 -R /var/www/nextcloud/
+sudo chown www-data:www-data /var/www/nextcloud/ -R
+
+sudo systemctl restart apache2
+
+
+#for accessing the filetransfer site
+http://192.168.100.4/nextcloud/
+
+username: teamslicex
+password: 73@mslice
+
+dbuser: admin
+dbpass: admin123
+dbname: nextcloud
+localhost
